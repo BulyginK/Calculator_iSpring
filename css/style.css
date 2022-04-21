@@ -1,0 +1,49 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    color: black;
+    background-color: #F0FFFF;
+}
+
+.title {
+    width: 100%;
+    text-align: left;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.container {
+    width: 97%;
+    max-width: 1140px;
+    margin: 0 auto;
+}
+
+.main {
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.main__total {
+    display: flex;
+}
+
+#command {
+    width: 40%;
+}
+
+#start {
+    width: 10%;
+}
+
+#input, #output {
+    right: 0;
+    height: 200px;
+    width: 400px;
+    margin-right: 20px;
+    resize: none;
+}
