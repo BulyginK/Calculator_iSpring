@@ -6,26 +6,25 @@ let btnAppend = document.querySelector('#append');
 
 let commands = ['var', 'let', 'fn', 'print', 'printvars', 'printfns'];
 
-class NewVar {
-    constructor(name, meaning) {
-        this.nameVar = name;
-        this.meaningVar = meaning;
-    }
-    
+class Vars {
+    constructor() {
+    }  
 }
 
 btnAppend.addEventListener('click', () => {
     let nameOperation = command.value.split(' ')[0];
     let bodyOperation = command.value.split(' ')[1];
+
     let operation = commands.find(item => nameOperation === item);
+
     if (operation === commands[0]) {
-        const newVar = new NewVar()
-        newVar.nameVar = operation
-        newVar.meaningVar = bodyOperation
+        vars[bodyOperation] = NaN
     } else if (operation === commands[1]) {
-        console.log(creatVars);
+        let nameVar = bodyOperation.split('=')[0];
         let meaning = bodyOperation.split('=')[1];
-        this.nameVar = operation;
-        this.meaningVar = meaning;
-    } 
+        vars[nameVar] = +meaning
+    }
+    console.log(vars);
 })
+
+const vars = new Vars()
