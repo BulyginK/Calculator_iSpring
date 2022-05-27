@@ -27,6 +27,12 @@ class Vars {
     print(name) {
         output.value = vars[name];
     }
+
+    printItems() {
+        for (let key in vars) {
+            output.value = '' + key + ':' + vars[key] + '\n';
+        }
+    }
 }
 
 class Fns {
@@ -52,14 +58,19 @@ class Elem {
     constructor() {
     }
 
-    start() {
-        let nameOperation = command.value.split(' ')[0];
-        let bodyOperation = command.value.split(' ')[1];
+    start(arr) {
+        // let nameOperation = command.value.split(' ')[0];
+        let nameOperation = arr[0].split(' ')[0];
+        // let bodyOperation = command.value.split(' ')[1];
+        let bodyOperation = arr[0].split(' ')[1];
         let operation = commands.find(item => nameOperation === item);
-        let name = bodyOperation.split('=')[0];
-        let meaning = bodyOperation.split('=')[1];
+
+        // ТУТ РАЗОБРАТЬСЯ!!
+        // let name = bodyOperation.split('=')[0];
+        // let meaning = bodyOperation.split('=')[1];
 
         input.value += command.value + '\n';
+        output.value = ''
 
         if (operation === commands[0]) { //var
             vars.checkVar(bodyOperation);
@@ -68,10 +79,11 @@ class Elem {
         } else if (operation === commands[2]) { //fn
             fns.checkFn(name, meaning)
         } else if (operation === commands[3]) { //print
-            vars.print(bodyOperation)
-        } else if (operation === commands[3]) { //printvars
-            output.value = vars[nameVar];
-        } else if (operation === commands[3]) { //printfns
+            vars.print(bodyOperation);
+        } else if (nameOperation === commands[4]) { //printvars
+            console.log('+');
+            vars.printItems()
+        } else if (nameOperation === commands[5]) { //printfns
             output.value = vars[nameVar];
         }
         command.value = "";
@@ -81,7 +93,8 @@ class Elem {
 }
 
 btnAppend.addEventListener('click', () => {
-    elem.start()
+    let arr = [command.value];
+    elem.start(arr);
 })
 
 const elem = new Elem();
