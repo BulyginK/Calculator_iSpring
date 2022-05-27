@@ -10,47 +10,51 @@ class Vars {
     constructor() {
     }
 
-    checkVar(name) {
-        for (let key in vars) {
-            if (name == key) {
-                output.value = 'Такая переменная уже существует!';
-                return
-            }
-        }
-        vars[name] = NaN;
-    }
-
-    addMeaning(nameVar, meaning) {
-        vars[nameVar] = +meaning;
-    }
-
-    print(name) {
-        output.value = vars[name];
-    }
-
-    printItems() {
-        for (let key in vars) {
-            output.value = '' + key + ':' + vars[key] + '\n';
-        }
-    }
 }
 
 class Fns {
     constructor() {
     }
 
-    checkFn(name, meaning) {
-        for (let key in fns) {
+}
+
+class Metods {
+    constructor() {
+    }
+
+    check(obj, name, meaning) {
+        for (let key in obj) {
             if (name == key) {
-                output.value = 'Такая функция уже существует!';
+                output.value = 'Уже существует!';
                 return
             }
         }
-        fns.addFn(name, meaning);
+        metods.add(obj, name, meaning);
     }
 
-    addFn(name, meaning) {
-        fns[name] = meaning;
+    add(obj, name, meaning) {
+        if (obj == vars) {
+            !meaning ? obj[name] = NaN : obj[name] = +meaning;
+        } else if (obj == fns) {
+            obj[name] = meaning;
+        }
+    }
+
+    print(obj, name) {
+        obj == vars ? output.value = obj[name] : output.value = obj[name]
+        // if (obj == vars) {
+        //     output.value = obj[name];
+        // } else if (obj == fns) {
+        //     output.value = obj[name];
+        // }
+
+        // ;
+    }
+
+    printItems(obj) {
+        for (let key in obj) {
+            output.value += '' + key + ':' + obj[key] + '\n';
+        }
     }
 }
 
@@ -59,33 +63,32 @@ class Elem {
     }
 
     start(arr) {
-        // let nameOperation = command.value.split(' ')[0];
         let nameOperation = arr[0].split(' ')[0];
-        // let bodyOperation = command.value.split(' ')[1];
         let bodyOperation = arr[0].split(' ')[1];
         let operation = commands.find(item => nameOperation === item);
 
-        // ТУТ РАЗОБРАТЬСЯ!!
-        // let name = bodyOperation.split('=')[0];
-        // let meaning = bodyOperation.split('=')[1];
+        let name = bodyOperation ? bodyOperation.split('=')[0] : '';
+        let meaning = bodyOperation ? bodyOperation.split('=')[1] : '';
 
         input.value += command.value + '\n';
-        output.value = ''
+        output.value = "";
 
         if (operation === commands[0]) { //var
-            vars.checkVar(bodyOperation);
+            metods.check(vars, name, meaning);
         } else if (operation === commands[1]) { //let
-            vars.addMeaning(name, meaning);
+            metods.add(vars, name, meaning);
         } else if (operation === commands[2]) { //fn
-            fns.checkFn(name, meaning)
+            metods.check(fns, name, meaning)
         } else if (operation === commands[3]) { //print
-            vars.print(bodyOperation);
+
+            // вот тут
+            metods.print(bodyOperation);
         } else if (nameOperation === commands[4]) { //printvars
-            console.log('+');
-            vars.printItems()
+            metods.printItems();
         } else if (nameOperation === commands[5]) { //printfns
-            output.value = vars[nameVar];
+            metods.printItems();
         }
+
         command.value = "";
         console.log(vars);
         console.log(fns);
@@ -100,3 +103,4 @@ btnAppend.addEventListener('click', () => {
 const elem = new Elem();
 const vars = new Vars();
 const fns = new Fns();
+const metods = new Metods();
