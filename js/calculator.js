@@ -20,7 +20,6 @@ class Fns {
 
 class Metods {
     constructor() {
-        this.vars = {}
     }
 
     check(obj, name, meaning) {
