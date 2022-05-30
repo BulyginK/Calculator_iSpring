@@ -11,13 +11,8 @@ class Vars {
         this.vars = {}
     }
 
-    add(name) {
-
-        if (obj == vars) {
-            !meaning ? obj[meaning] = NaN : obj[meaning] = +meaning;
-        } else if (obj == fns) {
-            obj[name] = meaning;
-        }
+    set add(name) {
+        this.vars[name] = NaN;
     }
 
 }
@@ -39,8 +34,18 @@ class Metods {
                 return
             }
         }
-        metods.add(obj, name, meaning);
+        vars.add(name);
     }
+
+    // check(obj, name, meaning) {
+    //     for (let key in obj) {
+    //         if (name == key) {
+    //             output.value = 'Уже существует!';
+    //             return
+    //         }
+    //     }
+    //     vars.add(obj, name, meaning);
+    // }
 
     // add(obj, name, meaning) {
     //     if (obj == vars) {
@@ -84,7 +89,7 @@ class Elem {
         output.value = "";
 
         if (operation === commands[0]) { //var
-            metods.check(vars, name, meaning);
+            metods.check(vars.vars, name, meaning);
         } else if (operation === commands[1]) { //let
             metods.add(vars, name, meaning);
         } else if (operation === commands[2]) { //fn
