@@ -8,6 +8,16 @@ let commands = ['var', 'let', 'fn', 'print', 'printvars', 'printfns'];
 
 class Vars {
     constructor() {
+        this.vars = {}
+    }
+
+    add(name) {
+
+        if (obj == vars) {
+            !meaning ? obj[meaning] = NaN : obj[meaning] = +meaning;
+        } else if (obj == fns) {
+            obj[name] = meaning;
+        }
     }
 
 }
@@ -32,13 +42,13 @@ class Metods {
         metods.add(obj, name, meaning);
     }
 
-    add(obj, name, meaning) {
-        if (obj == vars) {
-            !meaning ? obj[name] = NaN : obj[name] = +meaning;
-        } else if (obj == fns) {
-            obj[name] = meaning;
-        }
-    }
+    // add(obj, name, meaning) {
+    //     if (obj == vars) {
+    //         !meaning ? obj[name] = NaN : obj[name] = +meaning;
+    //     } else if (obj == fns) {
+    //         obj[name] = meaning;
+    //     }
+    // }
 
     print(obj, name) {
         obj == vars ? output.value = obj[name] : output.value = obj[name]
