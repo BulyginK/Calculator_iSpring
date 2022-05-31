@@ -1,15 +1,15 @@
 'use strict';
-let command = document.querySelector('#command');
-let input = document.querySelector('#input');
-let output = document.querySelector('#output');
-let btnAppend = document.querySelector('#append');
+const command = document.querySelector('#command');
+const input = document.querySelector('#input');
+const output = document.querySelector('#output');
+const btnAppend = document.querySelector('#append');
 
-let commands = ['var', 'let', 'fn', 'print', 'printvars', 'printfns'];
+const commands = ['var', 'let', 'fn', 'print', 'printvars', 'printfns'];
+const operations = ['+', '-', '*', '/']
 
 class Vars {
     constructor() {
     }
-
 }
 
 class Fns {
@@ -40,15 +40,21 @@ class Metods {
         }
     }
 
-    print(obj, name) {
-        obj == vars ? output.value = obj[name] : output.value = obj[name]
-        // if (obj == vars) {
-        //     output.value = obj[name];
-        // } else if (obj == fns) {
-        //     output.value = obj[name];
-        // }
+    computation() {
 
-        // ;
+    }
+
+    print(name) {
+        for (let key in vars) {
+            if (key == name) {
+                output.value = vars[name]
+            }
+        }
+        for (let key in fns) {
+            if (key == name) {
+                output.value = fns[name]
+            }
+        }
     }
 
     printItems(obj) {
@@ -65,23 +71,34 @@ class Elem {
     start(arr) {
         let nameOperation = arr[0].split(' ')[0];
         let bodyOperation = arr[0].split(' ')[1];
-        let operation = commands.find(item => nameOperation === item);
+        let nameCommand = commands.find(item => nameOperation === item);
 
         let name = bodyOperation ? bodyOperation.split('=')[0] : '';
         let meaning = bodyOperation ? bodyOperation.split('=')[1] : '';
 
+
+
+
         input.value += command.value + '\n';
         output.value = "";
 
-        if (operation === commands[0]) { //var
+        if (nameCommand === commands[0]) { //var
             metods.check(vars, name, meaning);
-        } else if (operation === commands[1]) { //let
+        } else if (nameCommand === commands[1]) { //let
             metods.add(vars, name, meaning);
-        } else if (operation === commands[2]) { //fn
+        } else if (nameCommand === commands[2]) { //fn
             metods.check(fns, name, meaning)
-        } else if (operation === commands[3]) { //print
+            for (let i = 0; i < operations.length; i++) {
+                if (meaning.includes(operations[i])) {
+                    let argument01 = meaning.split(operations[i])[0];
+                    let argument02 = meaning.split(operations[i])[1];
+                    console.log(argument01);
+                    console.log(argument02);
+                }
+            }
 
-            // вот тут
+            // console.log(operations.some(item => meaning.includes(item)));
+        } else if (nameCommand === commands[3]) { //print
             metods.print(bodyOperation);
         } else if (nameOperation === commands[4]) { //printvars
             metods.printItems();
