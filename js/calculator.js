@@ -7,15 +7,9 @@ const btnAppend = document.querySelector('#append');
 const commands = ['var', 'let', 'fn', 'print', 'printvars', 'printfns'];
 const operations = ['+', '-', '*', '/']
 
-class Vars {
+class Objects {
     constructor() {
     }
-}
-
-class Fns {
-    constructor() {
-    }
-
 }
 
 class Metods {
@@ -33,26 +27,13 @@ class Metods {
     }
 
     add(obj, name, meaning) {
-        if (obj == vars) {
-            !meaning ? obj[name] = NaN : obj[name] = +meaning;
-        } else if (obj == fns) {
-            obj[name] = meaning;
-        }
-    }
-
-    computation() {
-
+        !meaning ? obj[name] = NaN : obj[name] = meaning;
     }
 
     print(name) {
-        for (let key in vars) {
+        for (let key in objects) {
             if (key == name) {
-                output.value = vars[name]
-            }
-        }
-        for (let key in fns) {
-            if (key == name) {
-                output.value = fns[name]
+                output.value = objects[name]
             }
         }
     }
@@ -60,6 +41,38 @@ class Metods {
     printItems(obj) {
         for (let key in obj) {
             output.value += '' + key + ':' + obj[key] + '\n';
+        }
+    }
+
+    computation(meaning) {
+        for (let i = 0; i < operations.length; i++) {
+            if (meaning.includes(operations[i])) {
+                let argument01 = meaning.split(operations[i])[0];
+                let argument02 = meaning.split(operations[i])[1];
+                for (let key in objects) {
+                    if (key == argument01) {
+                        let key01 = +objects[key];
+                        for (let key in objects) {
+                            if (key == argument02) {
+                                let key02 = +objects[key];
+                                if (operations[i] == operations[0]) { // +
+                                    let sum = key01 + key02;
+                                    console.log(sum);
+                                } else if (operations[i] == operations[1]) { // -
+                                    let sum = key01 - key02;
+                                    console.log(sum);
+                                } else if (operations[i] == operations[2]) { // *
+                                    let sum = key01 * key02;
+                                    console.log(sum);
+                                } else if (operations[i] == operations[3]) { // /
+                                    let sum = key01 / key02;
+                                    console.log(sum);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -76,28 +89,16 @@ class Elem {
         let name = bodyOperation ? bodyOperation.split('=')[0] : '';
         let meaning = bodyOperation ? bodyOperation.split('=')[1] : '';
 
-
-
-
         input.value += command.value + '\n';
         output.value = "";
 
         if (nameCommand === commands[0]) { //var
-            metods.check(vars, name, meaning);
+            metods.check(objects, name, meaning);
         } else if (nameCommand === commands[1]) { //let
-            metods.add(vars, name, meaning);
+            metods.add(objects, name, meaning);
         } else if (nameCommand === commands[2]) { //fn
-            metods.check(fns, name, meaning)
-            for (let i = 0; i < operations.length; i++) {
-                if (meaning.includes(operations[i])) {
-                    let argument01 = meaning.split(operations[i])[0];
-                    let argument02 = meaning.split(operations[i])[1];
-                    console.log(argument01);
-                    console.log(argument02);
-                }
-            }
-
-            // console.log(operations.some(item => meaning.includes(item)));
+            metods.check(objects, name, meaning);
+            metods.computation(meaning);
         } else if (nameCommand === commands[3]) { //print
             metods.print(bodyOperation);
         } else if (nameOperation === commands[4]) { //printvars
@@ -107,8 +108,7 @@ class Elem {
         }
 
         command.value = "";
-        console.log(vars);
-        console.log(fns);
+        console.log(objects);
     }
 }
 
@@ -118,6 +118,5 @@ btnAppend.addEventListener('click', () => {
 })
 
 const elem = new Elem();
-const vars = new Vars();
-const fns = new Fns();
+const objects = new Objects();
 const metods = new Metods();
