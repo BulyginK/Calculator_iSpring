@@ -9,6 +9,7 @@ const operations = ['+', '-', '*', '/']
 
 class Objects {
     constructor() {
+        this.var = NaN
     }
 }
 
@@ -39,7 +40,6 @@ class Metods {
                 }
             }
         }
-        console.log(name);
     }
 
     print(name) {
@@ -114,7 +114,7 @@ class Elem {
         } else if (nameCommand === commands[3]) { //print
             metods.print(bodyOperation);
         } else if (nameOperation === commands[4]) { //printvars
-            metods.printItems();
+            metods.printItems(objects);
         } else if (nameOperation === commands[5]) { //printfns
             metods.printItems();
         }
