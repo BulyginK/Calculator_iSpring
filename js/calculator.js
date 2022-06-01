@@ -27,7 +27,19 @@ class Metods {
     }
 
     add(obj, name, meaning) {
-        !meaning ? obj[name] = NaN : obj[name] = meaning;
+        if (!meaning) {
+            obj[name] = NaN
+        } else {
+            for (let key in obj) {
+                if (meaning == key) {
+                    obj[name] = obj[key]
+                    return
+                } else {
+                    obj[name] = meaning
+                }
+            }
+        }
+        console.log(name);
     }
 
     print(name) {
