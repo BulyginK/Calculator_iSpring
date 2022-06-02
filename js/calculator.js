@@ -1,16 +1,11 @@
 'use strict';
+const form = document.querySelector('#form');
 const command = document.querySelector('#command');
 const input = document.querySelector('#input');
 const output = document.querySelector('#output');
-const btnAppend = document.querySelector('#append');
 
 const commands = ['var', 'let', 'fn', 'print', 'printvars', 'printfns'];
-const operations = ['+', '-', '*', '/']
-
-// class Objects {
-//     constructor() {
-//     }
-// }
+const operations = ['+', '-', '*', '/'];
 
 class Vars {
     constructor() {
@@ -19,6 +14,13 @@ class Vars {
 
 class Fns {
     constructor() {
+    }
+}
+
+class Arguments {
+    constructor(argumen01, argumen02) {
+        this.argumen01 = argumen01;
+        this.argumen02 = argumen02;
     }
 }
 
@@ -39,26 +41,15 @@ class Metods {
     add(objects, name, meaning) {
         if (!meaning) {
             objects[name] = NaN
-            console.log(objects);
         } else {
             objects[name] = '';
             for (let key in objects) {
                 if (meaning == key) {
-                    objects[name] = objects[key]
-                    console.log(objects);
+                    objects[name] = objects[key];
                     return
                 } else {
-                    objects[name] = meaning
-                    console.log(objects);
+                    objects[name] = meaning;
                 }
-            }
-        }
-    }
-
-    print(objects, name) {
-        for (let key in objects) {
-            if (key == name) {
-                output.value = objects[name]
             }
         }
     }
@@ -69,36 +60,67 @@ class Metods {
         }
     }
 
-    computation(meaning) {
-        for (let i = 0; i < operations.length; i++) {
-            if (meaning.includes(operations[i])) { // определение проводимой операции
-                let argument01 = meaning.split(operations[i])[0];
-                let argument02 = meaning.split(operations[i])[1];
-                for (let key in vars) {
-                    if (key == argument01) {
-                        let key01 = +vars[key];
+    computation(name) {
+        for (let key in vars) {  // поиск выводимого элемента в переменных
+            if (key == name) {
+                output.value = objects[name]
+                return
+            }
+        }
+        for (let key in fns) {  // поиск выводимой функции в функциях
+            if (key == name) {
+                for (let i = 0; i < operations.length; i++) {
+                    if (fns[key].includes(operations[i])) { // определение проводимой операции
+                        let argument01 = fns[key].split(operations[i])[0];
+                        let argument02 = fns[key].split(operations[i])[1];
+
                         for (let key in vars) {
-                            if (key == argument02) {
-                                let key02 = +vars[key];
-                                if (operations[i] == operations[0]) { // +
-                                    let sum = key01 + key02;
-                                    console.log(sum);
-                                } else if (operations[i] == operations[1]) { // -
-                                    let sum = key01 - key02;
-                                    console.log(sum);
-                                } else if (operations[i] == operations[2]) { // *
-                                    let sum = key01 * key02;
-                                    console.log(sum);
-                                } else if (operations[i] == operations[3]) { // /
-                                    let sum = key01 / key02;
-                                    console.log(sum);
-                                }
+                            
+                            if (key == argument01) {
+                                console.log('1');
+                                argument01 = +vars[key];
                             }
                         }
+                        for (let key in fns) {
+                                                        
+                            if (key == argument01) {
+                                console.log('2');
+                                argument01 = metods.computation(argument01);
+                            }
+                        }
+                        for (let key in vars) {
+                            
+                            if (key == argument02) {
+                                console.log('3');
+                                argument02 = +vars[key];
+                            }
+                        }
+                        for (let key in fns) {
+                            
+                            if (key == argument02) {
+                                console.log('4');
+                                argument02 = metods.computation(argument02);
+                            }
+                        }
+                        return metods.сalculationRun(operations[i], argument01, argument02);
                     }
                 }
             }
+        }   
+    }
+
+    сalculationRun (operations, argument01, argument02) {
+        let total
+        if (operations == operations[0]) { // +
+            total = argument01 + argument02;
+        } else if (operations == operations[1]) { // -
+            total = argument01 - argument02;
+        } else if (operations == operations[2]) { // *
+            total = argument01 * argument02;
+        } else if (operations == operations[3]) { // /
+            total = argument01 / argument02;
         }
+        return total
     }
 }
 
@@ -124,10 +146,8 @@ class Elem {
             metods.add(vars, name, meaning);
         } else if (nameCommand === commands[2]) { //fn
             metods.check(fns, name, meaning);
-            metods.computation(meaning);
         } else if (nameCommand === commands[3]) { //print
-            metods.print(vars, bodyOperation);
-            metods.print(fns, bodyOperation);
+            output.value = metods.computation(bodyOperation);
         } else if (nameOperation === commands[4]) { //printvars
             metods.printItems(vars);
         } else if (nameOperation === commands[5]) { //printfns
@@ -135,18 +155,18 @@ class Elem {
         }
 
         command.value = "";
-        // console.log(vars);
-        // console.log(fns);
+        console.log(vars);
+        console.log(fns);
     }
 }
 
-btnAppend.addEventListener('click', () => {
-    let arr = [command.value];
-    elem.start(arr);
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    elem.start([command.value]);
 })
 
 const elem = new Elem();
-// const objects = new Objects();
 const vars = new Vars();
 const fns = new Fns();
+const argumens = new Arguments();
 const metods = new Metods();
