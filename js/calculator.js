@@ -79,7 +79,7 @@ class Metods {
                                 argument01 = +vars[key];
                             }
                         }
-                        for (let key in fns) {                 
+                        for (let key in fns) {
                             if (key == argument01) {
                                 argument01 = metods.computation(argument01);
                             }
@@ -98,18 +98,18 @@ class Metods {
                     }
                 }
             }
-        }   
+        }
     }
 
-    сalculationRun (operations, argument01, argument02) {
+    сalculationRun(operator, argument01, argument02) {
         let total
-        if (operations == operations[0]) { // +
+        if (operator == operations[0]) { // +
             total = argument01 + argument02;
-        } else if (operations == operations[1]) { // -
+        } else if (operator == operations[1]) { // -
             total = argument01 - argument02;
-        } else if (operations == operations[2]) { // *
+        } else if (operator == operations[2]) { // *
             total = argument01 * argument02;
-        } else if (operations == operations[3]) { // /
+        } else if (operator == operations[3]) { // /
             total = argument01 / argument02;
         }
         return total
