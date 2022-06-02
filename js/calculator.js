@@ -7,9 +7,18 @@ const btnAppend = document.querySelector('#append');
 const commands = ['var', 'let', 'fn', 'print', 'printvars', 'printfns'];
 const operations = ['+', '-', '*', '/']
 
-class Objects {
+// class Objects {
+//     constructor() {
+//     }
+// }
+
+class Vars {
     constructor() {
-        this.var = NaN
+    }
+}
+
+class Fns {
+    constructor() {
     }
 }
 
@@ -17,32 +26,36 @@ class Metods {
     constructor() {
     }
 
-    check(obj, name, meaning) {
-        for (let key in obj) {
+    check(objects, name, meaning) {
+        for (let key in objects) {
             if (name == key) {
                 output.value = 'Уже существует!';
                 return
             }
         }
-        metods.add(obj, name, meaning);
+        metods.add(objects, name, meaning);
     }
 
-    add(obj, name, meaning) {
+    add(objects, name, meaning) {
         if (!meaning) {
-            obj[name] = NaN
+            objects[name] = NaN
+            console.log(objects);
         } else {
-            for (let key in obj) {
+            objects[name] = '';
+            for (let key in objects) {
                 if (meaning == key) {
-                    obj[name] = obj[key]
+                    objects[name] = objects[key]
+                    console.log(objects);
                     return
                 } else {
-                    obj[name] = meaning
+                    objects[name] = meaning
+                    console.log(objects);
                 }
             }
         }
     }
 
-    print(name) {
+    print(objects, name) {
         for (let key in objects) {
             if (key == name) {
                 output.value = objects[name]
@@ -50,23 +63,23 @@ class Metods {
         }
     }
 
-    printItems(obj) {
-        for (let key in obj) {
-            output.value += '' + key + ':' + obj[key] + '\n';
+    printItems(objects) {
+        for (let key in objects) {
+            output.value += '' + key + ':' + objects[key] + '\n';
         }
     }
 
     computation(meaning) {
         for (let i = 0; i < operations.length; i++) {
-            if (meaning.includes(operations[i])) {
+            if (meaning.includes(operations[i])) { // определение проводимой операции
                 let argument01 = meaning.split(operations[i])[0];
                 let argument02 = meaning.split(operations[i])[1];
-                for (let key in objects) {
+                for (let key in vars) {
                     if (key == argument01) {
-                        let key01 = +objects[key];
-                        for (let key in objects) {
+                        let key01 = +vars[key];
+                        for (let key in vars) {
                             if (key == argument02) {
-                                let key02 = +objects[key];
+                                let key02 = +vars[key];
                                 if (operations[i] == operations[0]) { // +
                                     let sum = key01 + key02;
                                     console.log(sum);
@@ -96,6 +109,7 @@ class Elem {
     start(arr) {
         let nameOperation = arr[0].split(' ')[0];
         let bodyOperation = arr[0].split(' ')[1];
+
         let nameCommand = commands.find(item => nameOperation === item);
 
         let name = bodyOperation ? bodyOperation.split('=')[0] : '';
@@ -105,22 +119,24 @@ class Elem {
         output.value = "";
 
         if (nameCommand === commands[0]) { //var
-            metods.check(objects, name, meaning);
+            metods.check(vars, name, meaning);
         } else if (nameCommand === commands[1]) { //let
-            metods.add(objects, name, meaning);
+            metods.add(vars, name, meaning);
         } else if (nameCommand === commands[2]) { //fn
-            metods.check(objects, name, meaning);
+            metods.check(fns, name, meaning);
             metods.computation(meaning);
         } else if (nameCommand === commands[3]) { //print
-            metods.print(bodyOperation);
+            metods.print(vars, bodyOperation);
+            metods.print(fns, bodyOperation);
         } else if (nameOperation === commands[4]) { //printvars
-            metods.printItems(objects);
+            metods.printItems(vars);
         } else if (nameOperation === commands[5]) { //printfns
-            metods.printItems();
+            metods.printItems(fns);
         }
 
         command.value = "";
-        console.log(objects);
+        // console.log(vars);
+        // console.log(fns);
     }
 }
 
@@ -130,5 +146,7 @@ btnAppend.addEventListener('click', () => {
 })
 
 const elem = new Elem();
-const objects = new Objects();
+// const objects = new Objects();
+const vars = new Vars();
+const fns = new Fns();
 const metods = new Metods();
