@@ -75,30 +75,22 @@ class Metods {
                         let argument02 = fns[key].split(operations[i])[1];
 
                         for (let key in vars) {
-                            
                             if (key == argument01) {
-                                console.log('1');
                                 argument01 = +vars[key];
                             }
                         }
-                        for (let key in fns) {
-                                                        
+                        for (let key in fns) {                 
                             if (key == argument01) {
-                                console.log('2');
                                 argument01 = metods.computation(argument01);
                             }
                         }
                         for (let key in vars) {
-                            
                             if (key == argument02) {
-                                console.log('3');
                                 argument02 = +vars[key];
                             }
                         }
                         for (let key in fns) {
-                            
                             if (key == argument02) {
-                                console.log('4');
                                 argument02 = metods.computation(argument02);
                             }
                         }
