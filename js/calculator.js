@@ -40,7 +40,7 @@ class Metods {
 
     add(objects, name, meaning) {
         if (!meaning) {
-            objects[name] = NaN
+            objects[name] = NaN;
         } else {
             objects[name] = '';
             for (let key in objects) {
@@ -63,7 +63,7 @@ class Metods {
     computation(name) {
         for (let key in vars) {  // поиск выводимого элемента в переменных
             if (key == name) {
-                output.value = objects[name]
+                output.value = objects[name];
                 return
             }
         }
