@@ -17,10 +17,8 @@ class Fns {
     }
 }
 
-class Arguments {
-    constructor(argumen01, argumen02) {
-        this.argumen01 = argumen01;
-        this.argumen02 = argumen02;
+class FnOperation {
+    constructor() {
     }
 }
 
@@ -63,14 +61,14 @@ class Metods {
     computation(name) {
         for (let key in vars) {  // поиск выводимого элемента в переменных
             if (key == name) {
-                output.value = objects[name];
-                return
+                return vars[key]
             }
         }
         for (let key in fns) {  // поиск выводимой функции в функциях
             if (key == name) {
                 for (let i = 0; i < operations.length; i++) {
                     if (fns[key].includes(operations[i])) { // определение проводимой операции
+                        fnOperations[key] = operations[i];
                         let argument01 = fns[key].split(operations[i])[0];
                         let argument02 = fns[key].split(operations[i])[1];
 
@@ -94,7 +92,8 @@ class Metods {
                                 argument02 = metods.computation(argument02);
                             }
                         }
-                        return metods.сalculationRun(operations[i], argument01, argument02);
+                        console.log(fnOperations[key]);
+                        return metods.сalculationRun(fnOperations[key], argument01, argument02);
                     }
                 }
             }
@@ -139,7 +138,7 @@ class Elem {
         } else if (nameCommand === commands[2]) { //fn
             metods.check(fns, name, meaning);
         } else if (nameCommand === commands[3]) { //print
-            output.value = metods.computation(bodyOperation);
+            output.value = metods.computation(bodyOperation, meaning);
         } else if (nameOperation === commands[4]) { //printvars
             metods.printItems(vars);
         } else if (nameOperation === commands[5]) { //printfns
@@ -160,5 +159,5 @@ form.addEventListener('submit', (e) => {
 const elem = new Elem();
 const vars = new Vars();
 const fns = new Fns();
-const argumens = new Arguments();
+const fnOperations = new FnOperation();
 const metods = new Metods();
