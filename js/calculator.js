@@ -26,39 +26,54 @@ class Metods {
     constructor() {
     }
 
-    check(objects, name, meaning) {
-        for (let key in objects) {
+    checkName(name, needless) {
+        if (/^[^0-9][0-9a-zA-Z\_]*$/g.test(name) && !needless) { // !needless - проверка чтобы не было еще данных после пробела
+            return true
+        } else {
+            metods.output('Неверно задано имя идентификатора! Можно использовать буквы английского алфавита, цифры и символ подчеркивания. Идентификатор не может начинаться с цифры.');
+            return false
+        }
+    }
+
+    checkRepeat(objects, otherObjects, name, meaning) {
+        for (let key in objects) { // поиск повторных идентификаторов
             if (name == key) {
-                output.value = 'Уже существует!';
-                return
+                return metods.output('Идентификатор с именем ' + name + ' уже существует!');
+            }
+        }
+        for (let key in otherObjects) { // поиск повторных идентификаторов
+            if (name == key) {
+                return metods.output('Идентификатор с именем ' + name + ' уже существует!');
             }
         }
         metods.add(objects, name, meaning);
     }
 
     add(objects, name, meaning) {
-        if (!meaning) {
+        if (!meaning) { // если значение не указано, то NaN
             objects[name] = NaN;
-        } else {
+        } else if (meaning) {
             objects[name] = '';
             for (let key in objects) {
                 if (meaning == key) {
-                    objects[name] = objects[key];
-                    return
+                    return objects[name] = objects[key]; // если значение равно ранее объявленному идентификатору
                 } else {
                     objects[name] = meaning;
                 }
             }
         }
+        metods.input();
     }
 
     printItems(objects) {
+        metods.input();
         for (let key in objects) {
             output.value += '' + key + ':' + objects[key] + '\n';
         }
     }
 
     computation(name) {
+        metods.input();
         for (let key in vars) {  // поиск выводимого элемента в переменных
             if (key == name) {
                 return vars[key]
@@ -92,7 +107,6 @@ class Metods {
                                 argument02 = metods.computation(argument02);
                             }
                         }
-                        console.log(fnOperations[key]);
                         return metods.сalculationRun(fnOperations[key], argument01, argument02);
                     }
                 }
@@ -113,6 +127,15 @@ class Metods {
         }
         return total
     }
+
+    input() {
+        input.value += command.value + '\n';
+        command.value = "";
+    }
+
+    output(message) {
+        output.value = message;
+    }
 }
 
 class Elem {
@@ -122,21 +145,27 @@ class Elem {
     start(arr) {
         let nameOperation = arr[0].split(' ')[0];
         let bodyOperation = arr[0].split(' ')[1];
+        let needless = arr[0].split(' ')[2];
 
-        let nameCommand = commands.find(item => nameOperation === item);
+        let nameCommand = commands.find(item => nameOperation === item); // определение введенной команды
 
         let name = bodyOperation ? bodyOperation.split('=')[0] : '';
         let meaning = bodyOperation ? bodyOperation.split('=')[1] : '';
 
-        input.value += command.value + '\n';
         output.value = "";
 
-        if (nameCommand === commands[0]) { //var
-            metods.check(vars, name, meaning);
+        if (nameCommand === commands[0]) { // var
+            if (metods.checkName(name, needless)) {
+                metods.checkRepeat(vars, fns, name, meaning);
+            }
         } else if (nameCommand === commands[1]) { //let
-            metods.add(vars, name, meaning);
+            if (metods.checkName(name, needless)) {
+                metods.add(vars, name, meaning);
+            }
         } else if (nameCommand === commands[2]) { //fn
-            metods.check(fns, name, meaning);
+            if (metods.checkName(name, needless)) {
+                metods.checkRepeat(fns, vars, name, meaning);
+            }
         } else if (nameCommand === commands[3]) { //print
             output.value = metods.computation(bodyOperation, meaning);
         } else if (nameOperation === commands[4]) { //printvars
@@ -144,16 +173,15 @@ class Elem {
         } else if (nameOperation === commands[5]) { //printfns
             metods.printItems(fns);
         }
-
-        command.value = "";
-        console.log(vars);
-        console.log(fns);
     }
 }
 
 form.addEventListener('submit', (e) => {
     e.preventDefault();
     elem.start([command.value]);
+
+    console.log(vars);
+    console.log(fns);
 })
 
 const elem = new Elem();
