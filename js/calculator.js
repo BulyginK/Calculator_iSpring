@@ -72,12 +72,12 @@ class Methods {
     }
 
     checkRepeat(objects, otherObjects, name, meaning) {
-        for (let key in objects) { // поиск повторных идентификаторов
+        for (let key in objects) { // поиск повторных идентификаторов среди переменных
             if (name == key) {
                 return methods.output('Идентификатор с именем ' + name + ' уже существует!');
             }
         }
-        for (let key in otherObjects) { // поиск повторных идентификаторов
+        for (let key in otherObjects) { // поиск повторных идентификаторов среди функций
             if (name == key) {
                 return methods.output('Идентификатор с именем ' + name + ' уже существует!');
             }
@@ -103,7 +103,6 @@ class Methods {
                     objects[name] = meaning;
                 }
             }
-
         }
     }
 
@@ -186,14 +185,27 @@ class Methods {
     output(message) {
         output.value = String(parseFloat(message, 10)) === String(message) ? message.toFixed(2) : message;
     }
+
+    // sort(vars) {
+    //     let varsArr = [];
+    //     for (let key in vars) {
+    //         varsArr.push(key)
+    //     }
+    //     const SortArray = (x, y) => {
+    //         if (x < y) { return -1 }
+    //         if (x > y) { return 1 }
+    //         return 0;
+    //     }
+    //     let sortVarsArr = varsArr.sort(SortArray);
+    // }
 }
 
 form.addEventListener('submit', (e) => {
     e.preventDefault();
     methods.start([command.value]);
 
-    console.log(vars);
-    console.log(fns);
+    // console.log(vars);
+    // console.log(fns);
 })
 
 const vars = new Vars();
