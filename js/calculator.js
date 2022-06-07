@@ -44,18 +44,21 @@ class Methods {
             }
         } else if (nameCommand === commands[1]) { //let
             if (methods.checkName(name, needless)) {
-                methods.add(vars, name, meaning);
+                methods.add(vars, fns, name, meaning);
             }
         } else if (nameCommand === commands[2]) { //fn
             if (methods.checkName(name, needless)) {
                 methods.checkRepeat(fns, vars, name, meaning);
             }
         } else if (nameCommand === commands[3]) { //print
-            methods.output(Number(methods.computation(bodyOperation, meaning)));
+            methods.output(Number(methods.computation(bodyOperation)));
+            methods.input();
         } else if (nameOperation === commands[4]) { //printvars
-            methods.printItems(vars);
+            methods.printVars(vars);
+            methods.input();
         } else if (nameOperation === commands[5]) { //printfns
-            methods.printItems(fns);
+            methods.printFns(fns);
+            methods.input();
         }
     }
 
@@ -79,10 +82,11 @@ class Methods {
                 return methods.output('Идентификатор с именем ' + name + ' уже существует!');
             }
         }
-        methods.add(objects, name, meaning);
+        methods.add(objects, otherObjects, name, meaning);
     }
 
-    add(objects, name, meaning) {
+    add(objects, otherObjects, name, meaning) {
+        methods.input();
         if (!meaning) { // если значение не указано, то NaN
             objects[name] = NaN;
         } else if (meaning) {
@@ -91,22 +95,19 @@ class Methods {
                 if (meaning == key) {
                     return objects[name] = objects[key]; // если значение равно ранее объявленному идентификатору
                 } else {
+                    for (let key in otherObjects) { // если значение равно ранее объявленной функции
+                        if (meaning == key) {
+                            return objects[name] = methods.computation(meaning);
+                        }
+                    }
                     objects[name] = meaning;
                 }
             }
-        }
-        methods.input();
-    }
 
-    printItems(objects) {
-        methods.input();
-        for (let key in objects) {
-            output.value += '' + key + ':' + objects[key] + '\n';
         }
     }
 
-    computation(name, meaning) {
-        methods.input();
+    computation(name) {
         for (let key in vars) {  // поиск выводимого элемента в переменных
             if (key == name) {
                 return vars[key]
@@ -142,9 +143,9 @@ class Methods {
                                 return methods.сalculationRun(fnOperations[key], +argument01, +argument02);
                             }
                         }
-                        for (let key in vars) {  // поиск элемента в переменных если функция равна ему
-                            if (key == meaning) {
-                                return vars[key]
+                        for (let keyVars in vars) {  // поиск элемента в переменных если функция равна переменной
+                            if (keyVars == fns[key]) {
+                                return vars[keyVars]
                             }
                         }
                     }
@@ -165,14 +166,25 @@ class Methods {
         }
     }
 
+    printVars(vars) {
+        for (let key in vars) {
+            output.value += '' + key + ':' + Number(vars[key]).toFixed(2) + '\n';
+        }
+    }
+
+    printFns(fns) {
+        for (let key in fns) {
+            output.value += '' + key + ':' + Number(methods.computation(key, fns[key])).toFixed(2) + '\n';
+        }
+    }
+
     input() {
         input.value += command.value + '\n';
         command.value = "";
     }
 
     output(message) {
-        console.log(typeof message);
-        output.value = message.toFixed(2);
+        output.value = String(parseFloat(message, 10)) === String(message) ? message.toFixed(2) : message;
     }
 }
 
