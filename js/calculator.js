@@ -51,9 +51,7 @@ class Methods {
                 methods.checkRepeat(fns, vars, name, meaning);
             }
         } else if (nameCommand === commands[3]) { //print
-            let print = methods.computation(bodyOperation, meaning);
-            console.log(print);
-            output.value = print.toFixed(2);
+            methods.output(Number(methods.computation(bodyOperation, meaning)));
         } else if (nameOperation === commands[4]) { //printvars
             methods.printItems(vars);
         } else if (nameOperation === commands[5]) { //printfns
@@ -107,7 +105,7 @@ class Methods {
         }
     }
 
-    computation(name) {
+    computation(name, meaning) {
         methods.input();
         for (let key in vars) {  // поиск выводимого элемента в переменных
             if (key == name) {
@@ -123,7 +121,7 @@ class Methods {
 
                                 for (let key in vars) {
                                     if (key == argument01) {
-                                        argument01 = +vars[key];
+                                        argument01 = vars[key];
                                     }
                                 }
                                 for (let key in fns) {
@@ -133,7 +131,7 @@ class Methods {
                                 }
                                 for (let key in vars) {
                                     if (key == argument02) {
-                                        argument02 = +vars[key];
+                                        argument02 = vars[key];
                                     }
                                 }
                                 for (let key in fns) {
@@ -141,15 +139,18 @@ class Methods {
                                         argument02 = methods.computation(argument02);
                                     }
                                 }
-                                return methods.сalculationRun(fnOperations[key], argument01, argument02);
+                                return methods.сalculationRun(fnOperations[key], +argument01, +argument02);
+                            }
+                        }
+                        for (let key in vars) {  // поиск элемента в переменных если функция равна ему
+                            if (key == meaning) {
+                                return vars[key]
                             }
                         }
                     }
                 }
             }
         }
-        console.log('+');
-        return "Не объявлен!"
     }
 
     сalculationRun(operator, argument01, argument02) {
@@ -170,7 +171,8 @@ class Methods {
     }
 
     output(message) {
-        output.value = message;
+        console.log(typeof message);
+        output.value = message.toFixed(2);
     }
 }
 
