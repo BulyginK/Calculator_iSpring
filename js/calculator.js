@@ -22,123 +22,7 @@ class FnOperation {
     }
 }
 
-class Metods {
-    constructor() {
-    }
-
-    checkName(name, needless) {
-        if (/^[^0-9][0-9a-zA-Z\_]*$/g.test(name) && !needless) { // !needless - проверка чтобы не было еще данных после пробела
-            return true
-        } else {
-            metods.output('Неверно задано имя идентификатора! Можно использовать буквы английского алфавита, цифры и символ подчеркивания. Идентификатор не может начинаться с цифры.');
-            return false
-        }
-    }
-
-    checkRepeat(objects, otherObjects, name, meaning) {
-        for (let key in objects) { // поиск повторных идентификаторов
-            if (name == key) {
-                return metods.output('Идентификатор с именем ' + name + ' уже существует!');
-            }
-        }
-        for (let key in otherObjects) { // поиск повторных идентификаторов
-            if (name == key) {
-                return metods.output('Идентификатор с именем ' + name + ' уже существует!');
-            }
-        }
-        metods.add(objects, name, meaning);
-    }
-
-    add(objects, name, meaning) {
-        if (!meaning) { // если значение не указано, то NaN
-            objects[name] = NaN;
-        } else if (meaning) {
-            objects[name] = '';
-            for (let key in objects) {
-                if (meaning == key) {
-                    return objects[name] = objects[key]; // если значение равно ранее объявленному идентификатору
-                } else {
-                    objects[name] = meaning;
-                }
-            }
-        }
-        metods.input();
-    }
-
-    printItems(objects) {
-        metods.input();
-        for (let key in objects) {
-            output.value += '' + key + ':' + objects[key] + '\n';
-        }
-    }
-
-    computation(name) {
-        metods.input();
-        for (let key in vars) {  // поиск выводимого элемента в переменных
-            if (key == name) {
-                return vars[key]
-            }
-        }
-        for (let key in fns) {  // поиск выводимой функции в функциях
-            if (key == name) {
-                for (let i = 0; i < operations.length; i++) {
-                    if (fns[key].includes(operations[i])) { // определение проводимой операции
-                        fnOperations[key] = operations[i];
-                        let argument01 = fns[key].split(operations[i])[0];
-                        let argument02 = fns[key].split(operations[i])[1];
-
-                        for (let key in vars) {
-                            if (key == argument01) {
-                                argument01 = +vars[key];
-                            }
-                        }
-                        for (let key in fns) {
-                            if (key == argument01) {
-                                argument01 = metods.computation(argument01);
-                            }
-                        }
-                        for (let key in vars) {
-                            if (key == argument02) {
-                                argument02 = +vars[key];
-                            }
-                        }
-                        for (let key in fns) {
-                            if (key == argument02) {
-                                argument02 = metods.computation(argument02);
-                            }
-                        }
-                        return metods.сalculationRun(fnOperations[key], argument01, argument02);
-                    }
-                }
-            }
-        }
-    }
-
-    сalculationRun(operator, argument01, argument02) {
-        let total
-        if (operator == operations[0]) { // +
-            total = argument01 + argument02;
-        } else if (operator == operations[1]) { // -
-            total = argument01 - argument02;
-        } else if (operator == operations[2]) { // *
-            total = argument01 * argument02;
-        } else if (operator == operations[3]) { // /
-            total = argument01 / argument02;
-        }
-        return total
-    }
-
-    input() {
-        input.value += command.value + '\n';
-        command.value = "";
-    }
-
-    output(message) {
-        output.value = message;
-    }
-}
-
-class Elem {
+class Methods {
     constructor() {
     }
 
@@ -155,37 +39,150 @@ class Elem {
         output.value = "";
 
         if (nameCommand === commands[0]) { // var
-            if (metods.checkName(name, needless)) {
-                metods.checkRepeat(vars, fns, name, meaning);
+            if (methods.checkName(name, needless)) {
+                methods.checkRepeat(vars, fns, name, meaning);
             }
         } else if (nameCommand === commands[1]) { //let
-            if (metods.checkName(name, needless)) {
-                metods.add(vars, name, meaning);
+            if (methods.checkName(name, needless)) {
+                methods.add(vars, name, meaning);
             }
         } else if (nameCommand === commands[2]) { //fn
-            if (metods.checkName(name, needless)) {
-                metods.checkRepeat(fns, vars, name, meaning);
+            if (methods.checkName(name, needless)) {
+                methods.checkRepeat(fns, vars, name, meaning);
             }
         } else if (nameCommand === commands[3]) { //print
-            output.value = metods.computation(bodyOperation, meaning);
+            let print = methods.computation(bodyOperation, meaning);
+            console.log(print);
+            output.value = print.toFixed(2);
         } else if (nameOperation === commands[4]) { //printvars
-            metods.printItems(vars);
+            methods.printItems(vars);
         } else if (nameOperation === commands[5]) { //printfns
-            metods.printItems(fns);
+            methods.printItems(fns);
         }
+    }
+
+    checkName(name, needless) {
+        if (/^[^0-9][0-9a-zA-Z\_]*$/g.test(name) && !needless) { // !needless - проверка чтобы не было еще данных после пробела
+            return true
+        } else {
+            methods.output('Неверно задано имя идентификатора! Можно использовать буквы английского алфавита, цифры и символ подчеркивания. Идентификатор не может начинаться с цифры.');
+            return false
+        }
+    }
+
+    checkRepeat(objects, otherObjects, name, meaning) {
+        for (let key in objects) { // поиск повторных идентификаторов
+            if (name == key) {
+                return methods.output('Идентификатор с именем ' + name + ' уже существует!');
+            }
+        }
+        for (let key in otherObjects) { // поиск повторных идентификаторов
+            if (name == key) {
+                return methods.output('Идентификатор с именем ' + name + ' уже существует!');
+            }
+        }
+        methods.add(objects, name, meaning);
+    }
+
+    add(objects, name, meaning) {
+        if (!meaning) { // если значение не указано, то NaN
+            objects[name] = NaN;
+        } else if (meaning) {
+            objects[name] = '';
+            for (let key in objects) {
+                if (meaning == key) {
+                    return objects[name] = objects[key]; // если значение равно ранее объявленному идентификатору
+                } else {
+                    objects[name] = meaning;
+                }
+            }
+        }
+        methods.input();
+    }
+
+    printItems(objects) {
+        methods.input();
+        for (let key in objects) {
+            output.value += '' + key + ':' + objects[key] + '\n';
+        }
+    }
+
+    computation(name) {
+        methods.input();
+        for (let key in vars) {  // поиск выводимого элемента в переменных
+            if (key == name) {
+                return vars[key]
+            } else {
+                for (let key in fns) {  // поиск выводимой функции в функциях
+                    if (key == name) {
+                        for (let i = 0; i < operations.length; i++) {
+                            if (fns[key].includes(operations[i])) { // определение проводимой операции
+                                fnOperations[key] = operations[i];
+                                let argument01 = fns[key].split(operations[i])[0];
+                                let argument02 = fns[key].split(operations[i])[1];
+
+                                for (let key in vars) {
+                                    if (key == argument01) {
+                                        argument01 = +vars[key];
+                                    }
+                                }
+                                for (let key in fns) {
+                                    if (key == argument01) {
+                                        argument01 = methods.computation(argument01);
+                                    }
+                                }
+                                for (let key in vars) {
+                                    if (key == argument02) {
+                                        argument02 = +vars[key];
+                                    }
+                                }
+                                for (let key in fns) {
+                                    if (key == argument02) {
+                                        argument02 = methods.computation(argument02);
+                                    }
+                                }
+                                return methods.сalculationRun(fnOperations[key], argument01, argument02);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        console.log('+');
+        return "Не объявлен!"
+    }
+
+    сalculationRun(operator, argument01, argument02) {
+        if (operator == operations[0]) { // +
+            return argument01 + argument02;
+        } else if (operator == operations[1]) { // -
+            return argument01 - argument02;
+        } else if (operator == operations[2]) { // *
+            return argument01 * argument02;
+        } else if (operator == operations[3]) { // /
+            return argument01 / argument02;
+        }
+    }
+
+    input() {
+        input.value += command.value + '\n';
+        command.value = "";
+    }
+
+    output(message) {
+        output.value = message;
     }
 }
 
 form.addEventListener('submit', (e) => {
     e.preventDefault();
-    elem.start([command.value]);
+    methods.start([command.value]);
 
     console.log(vars);
     console.log(fns);
 })
 
-const elem = new Elem();
 const vars = new Vars();
 const fns = new Fns();
 const fnOperations = new FnOperation();
-const metods = new Metods();
+const methods = new Methods();
