@@ -43,7 +43,7 @@ class Methods {
                 methods.checkRepeat(vars, fns, name, meaning);
             }
         } else if (nameCommand === commands[1]) { //let
-            if (methods.checkName(name, needless)) {
+            if (methods.checkName(name, needless) && methods.checkLetNum(meaning)) {
                 methods.add(vars, fns, name, meaning);
             }
         } else if (nameCommand === commands[2]) { //fn
@@ -85,6 +85,23 @@ class Methods {
             }
         }
         methods.add(objects, otherObjects, name, meaning);
+    }
+
+    checkLetNum(meaning) { // проверка переменной на числовове значение
+        if (String(parseFloat(meaning, 10)) === String(meaning)) {
+            return true
+        } else {
+            methods.output('Задано не числовое значение!');
+            return false
+        }
+    }
+
+    checkLetLets(meaning) { // поиск значения среди уже объявленных переменных
+        for (let key in vars) { 
+            if (meaning == key) {
+                return true;
+            }
+        }
     }
 
     add(objects, otherObjects, name, meaning) {
