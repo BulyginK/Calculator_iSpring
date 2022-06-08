@@ -26,37 +26,55 @@ class Methods {
     constructor() {
     }
 
-    start(arr) {
+    start(arr) { // метод для запуска методов
         let nameOperation = arr[0].split(' ')[0];
         let bodyOperation = arr[0].split(' ')[1];
         let needless = arr[0].split(' ')[2];
 
         let nameCommand = commands.find(item => nameOperation === item); // определение введенной команды
 
-        let name = bodyOperation ? bodyOperation.split('=')[0] : '';
-        let meaning = bodyOperation ? bodyOperation.split('=')[1] : '';
+        let name = bodyOperation ? bodyOperation.split('=')[0] : ''; // имя
+        let meaning = bodyOperation ? bodyOperation.split('=')[1] : ''; // значение
 
         output.value = "";
 
-        if (nameCommand === commands[0]) { // var
-            if (methods.checkName(name, needless)) {
-                methods.checkRepeat(vars, fns, name, meaning);
+        if (nameCommand === commands[0]) { // введено var
+            if (methods.checkName(name, needless) && !meaning) { // проверка имени переменной
+                if (!methods.searchRepeat(vars, name) || !methods.searchRepeat(fns, name)) { // поиск среди имеющихся идентификаторов
+                    methods.add(vars, fns, name, meaning); // добавление переменной
+                } else {
+                    methods.output('Неверно введено значение!');
+                }
+            } else {
+                methods.output('Неверно введено значение!');
             }
-        } else if (nameCommand === commands[1]) { //let
-            if (methods.checkName(name, needless) && methods.checkLetNum(meaning)) {
-                methods.add(vars, fns, name, meaning);
+        } else if (nameCommand === commands[1]) { // введено let
+            if (methods.checkName(name, needless) && !methods.searchRepeat(fns, name)) {  // проверка имени переменной и отсутствовать среди функций
+                if (methods.checkLetNum(meaning) || methods.searchRepeat(vars, meaning) || methods.searchRepeat(fns, meaning)) { // значение должно быть числом или уже имеющейся переменной
+                    methods.add(vars, fns, name, meaning); // добавление переменной
+                } else {
+                    methods.output('Неверно введено значение!');
+                }
+            } else {
+                methods.output('Неверно введено значение!');
             }
-        } else if (nameCommand === commands[2]) { //fn
-            if (methods.checkName(name, needless)) {
-                methods.checkRepeat(fns, vars, name, meaning);
+        } else if (nameCommand === commands[2]) { // введено fn
+            if (methods.checkName(name, needless)) { // проверка имени функции 
+                if (!methods.searchRepeat(vars, meaning) || !methods.searchRepeat(fns, meaning)) { // поиск среди имеющихся идентификаторов
+                    methods.add(fns, vars, name, meaning); // добавление функции
+                } else {
+                    methods.output('Неверно введено значение!');
+                }
+            } else {
+                methods.output('Неверно введено значение!');
             }
-        } else if (nameCommand === commands[3]) { //print
+        } else if (nameCommand === commands[3]) { // введено print
             methods.output(Number(methods.computation(bodyOperation)));
             methods.input();
-        } else if (nameOperation === commands[4]) { //printvars
+        } else if (nameOperation === commands[4]) { // введено printvars
             methods.printVars(vars);
             methods.input();
-        } else if (nameOperation === commands[5]) { //printfns
+        } else if (nameOperation === commands[5]) { // введено printfns
             methods.printFns(fns);
             methods.input();
         } else {
@@ -67,41 +85,46 @@ class Methods {
     checkName(name, needless) {
         if (/^[^0-9][0-9a-zA-Z\_]*$/g.test(name) && !needless) { // !needless - проверка чтобы не было еще данных после пробела
             return true
-        } else {
-            methods.output('Неверно задано имя идентификатора! Можно использовать буквы английского алфавита, цифры и символ подчеркивания. Идентификатор не может начинаться с цифры.');
-            return false
         }
+        methods.output('Неверно задано имя идентификатора! Можно использовать буквы английского алфавита, цифры и символ подчеркивания. Идентификатор не может начинаться с цифры.');
+        return false
     }
 
-    checkRepeat(objects, otherObjects, name, meaning) {
-        for (let key in objects) { // поиск повторных идентификаторов среди переменных
-            if (name == key) {
-                return methods.output('Идентификатор с именем ' + name + ' уже существует!');
-            }
-        }
-        for (let key in otherObjects) { // поиск повторных идентификаторов среди функций
-            if (name == key) {
-                return methods.output('Идентификатор с именем ' + name + ' уже существует!');
-            }
-        }
-        methods.add(objects, otherObjects, name, meaning);
-    }
+    // checkRepeat(objects, otherObjects, name, meaning) {
+    //     if (methods.searchLetLets(objects, name)) {
+    //         return methods.output('Идентификатор с именем ' + name + ' уже существует!');
+    //     }
+    //     if (methods.searchLetLets(objects, name)) {
+    //         return methods.output('Идентификатор с именем ' + name + ' уже существует!');
+    //     }
+
+    //     for (let key in objects) { // поиск повторных идентификаторов среди переменных
+    //         if (name == key) {
+    //             return methods.output('Идентификатор с именем ' + name + ' уже существует!');
+    //         }
+    //     }
+    //     for (let key in otherObjects) { // поиск повторных идентификаторов среди функций
+    //         if (name == key) {
+    //             return methods.output('Идентификатор с именем ' + name + ' уже существует!');
+    //         }
+    //     }
+    //     methods.add(objects, otherObjects, name, meaning);
+    // }
 
     checkLetNum(meaning) { // проверка переменной на числовове значение
         if (String(parseFloat(meaning, 10)) === String(meaning)) {
             return true
-        } else {
-            methods.output('Задано не числовое значение!');
-            return false
         }
+        return false
     }
 
-    checkLetLets(meaning) { // поиск значения среди уже объявленных переменных
-        for (let key in vars) { 
-            if (meaning == key) {
+    searchRepeat(objects, name) { // поиск значения среди уже объявленных переменных
+        for (let key in objects) {
+            if (name == key) {
                 return true;
             }
         }
+        return false
     }
 
     add(objects, otherObjects, name, meaning) {
