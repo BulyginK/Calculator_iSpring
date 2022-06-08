@@ -59,6 +59,8 @@ class Methods {
         } else if (nameOperation === commands[5]) { //printfns
             methods.printFns(fns);
             methods.input();
+        } else {
+            methods.output('Неверно задано условие!');
         }
     }
 
@@ -86,23 +88,28 @@ class Methods {
     }
 
     add(objects, otherObjects, name, meaning) {
-        methods.input();
-        if (!meaning) { // если значение не указано, то NaN
+        if (!meaning && objects == vars) { // если значение не указано, то NaN
+            methods.input();
             objects[name] = NaN;
         } else if (meaning) {
+            methods.input();
             objects[name] = '';
             for (let key in objects) {
                 if (meaning == key) {
                     return objects[name] = objects[key]; // если значение равно ранее объявленному идентификатору
                 } else {
-                    for (let key in otherObjects) { // если значение равно ранее объявленной функции
-                        if (meaning == key) {
-                            return objects[name] = methods.computation(meaning);
+                    if (objects == vars) { // если задается значение let
+                        for (let key in otherObjects) { // если переменная равна функции происходит ее расчет
+                            if (meaning == key) {
+                                return objects[name] = methods.computation(meaning);
+                            }
                         }
                     }
                     objects[name] = meaning;
                 }
             }
+        } else {
+            return methods.output('Неверно объявлена функция!');
         }
     }
 
@@ -119,22 +126,22 @@ class Methods {
                                 let argument01 = fns[key].split(operations[i])[0];
                                 let argument02 = fns[key].split(operations[i])[1];
 
-                                for (let key in vars) {
+                                for (let key in vars) { // если первый аргумент является переменной
                                     if (key == argument01) {
                                         argument01 = vars[key];
                                     }
                                 }
-                                for (let key in fns) {
+                                for (let key in fns) { // если первый аргумент является функцией уходит на новый расчет
                                     if (key == argument01) {
                                         argument01 = methods.computation(argument01);
                                     }
                                 }
-                                for (let key in vars) {
+                                for (let key in vars) { // если второй аргумент является переменной
                                     if (key == argument02) {
                                         argument02 = vars[key];
                                     }
                                 }
-                                for (let key in fns) {
+                                for (let key in fns) { // если второй аргумент является функцией уходит на новый расчет
                                     if (key == argument02) {
                                         argument02 = methods.computation(argument02);
                                     }
@@ -144,9 +151,10 @@ class Methods {
                         }
                         for (let keyVars in vars) {  // поиск элемента в переменных если функция равна переменной
                             if (keyVars == fns[key]) {
-                                return vars[keyVars]
+                                return +vars[keyVars]
                             }
                         }
+                        return methods.output('Неверно указан вид операции в функции!');
                     }
                 }
             }
@@ -183,29 +191,16 @@ class Methods {
     }
 
     output(message) {
-        output.value = String(parseFloat(message, 10)) === String(message) ? message.toFixed(2) : message;
+        output.value = String(parseFloat(message, 10)) === String(message) ? message.toFixed(2) : message;  // проверка на число
     }
-
-    // sort(vars) {
-    //     let varsArr = [];
-    //     for (let key in vars) {
-    //         varsArr.push(key)
-    //     }
-    //     const SortArray = (x, y) => {
-    //         if (x < y) { return -1 }
-    //         if (x > y) { return 1 }
-    //         return 0;
-    //     }
-    //     let sortVarsArr = varsArr.sort(SortArray);
-    // }
 }
 
 form.addEventListener('submit', (e) => {
     e.preventDefault();
     methods.start([command.value]);
 
-    // console.log(vars);
-    // console.log(fns);
+    console.log(vars);
+    console.log(fns);
 })
 
 const vars = new Vars();
