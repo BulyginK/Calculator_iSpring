@@ -26,7 +26,7 @@ class Methods {
     constructor() {
     }
 
-    start(arr) { // метод для запуска методов
+    start(arr) {
         let nameOperation = arr[0].split(' ')[0];
         let bodyOperation = arr[0].split(' ')[1];
         let needless = arr[0].split(' ')[2];
