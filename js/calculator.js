@@ -59,7 +59,7 @@ class Methods {
                 methods.output('Неверно введено значение!');
             }
         } else if (nameCommand === commands[2]) { // введено fn
-            if (methods.checkName(name, needless) && methods.checkFn(meaning)) { // проверка имени функции
+            if (methods.checkName(name, needless) && methods.checkFn(meaning)) { // проверка имени функции, и ее значения
                 if (!methods.searchRepeat(vars, name) && !methods.searchRepeat(fns, name)) { // поиск среди имеющихся идентификаторов
 
                     methods.add(fns, vars, name, meaning); // добавление функции
