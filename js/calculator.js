@@ -40,7 +40,7 @@ class Methods {
 
         if (nameCommand === commands[0]) { // введено var
             if (methods.checkName(name, needless) && !meaning) { // проверка имени переменной
-                if (!methods.searchRepeat(vars, name) || !methods.searchRepeat(fns, name)) { // поиск среди имеющихся идентификаторов
+                if (!methods.searchRepeat(vars, name) && !methods.searchRepeat(fns, name)) { // поиск среди имеющихся идентификаторов
                     methods.add(vars, fns, name, meaning); // добавление переменной
                 } else {
                     methods.output('Неверно введено значение!');
@@ -59,8 +59,9 @@ class Methods {
                 methods.output('Неверно введено значение!');
             }
         } else if (nameCommand === commands[2]) { // введено fn
-            if (methods.checkName(name, needless)) { // проверка имени функции 
-                if (!methods.searchRepeat(vars, meaning) || !methods.searchRepeat(fns, meaning)) { // поиск среди имеющихся идентификаторов
+            if (methods.checkName(name, needless) && methods.checkFn(meaning)) { // проверка имени функции
+                if (!methods.searchRepeat(vars, name) && !methods.searchRepeat(fns, name)) { // поиск среди имеющихся идентификаторов
+
                     methods.add(fns, vars, name, meaning); // добавление функции
                 } else {
                     methods.output('Неверно введено значение!');
@@ -90,27 +91,6 @@ class Methods {
         return false
     }
 
-    // checkRepeat(objects, otherObjects, name, meaning) {
-    //     if (methods.searchLetLets(objects, name)) {
-    //         return methods.output('Идентификатор с именем ' + name + ' уже существует!');
-    //     }
-    //     if (methods.searchLetLets(objects, name)) {
-    //         return methods.output('Идентификатор с именем ' + name + ' уже существует!');
-    //     }
-
-    //     for (let key in objects) { // поиск повторных идентификаторов среди переменных
-    //         if (name == key) {
-    //             return methods.output('Идентификатор с именем ' + name + ' уже существует!');
-    //         }
-    //     }
-    //     for (let key in otherObjects) { // поиск повторных идентификаторов среди функций
-    //         if (name == key) {
-    //             return methods.output('Идентификатор с именем ' + name + ' уже существует!');
-    //         }
-    //     }
-    //     methods.add(objects, otherObjects, name, meaning);
-    // }
-
     checkLetNum(meaning) { // проверка переменной на числовове значение
         if (String(parseFloat(meaning, 10)) === String(meaning)) {
             return true
@@ -125,6 +105,25 @@ class Methods {
             }
         }
         return false
+    }
+
+    checkFn(meaning) {
+        if (methods.searchRepeat(vars, meaning)) { // проверка функции на приравненности к одной из переменных
+            return true
+        } else {
+            for (let i = 0; i < operations.length; i++) {
+                if (meaning.includes(operations[i])) { // проверка функции на правильность использованных идентификаторов в функции
+                    let argument01 = meaning.split(operations[i])[0];
+                    let argument02 = meaning.split(operations[i])[1];
+                    if (methods.searchRepeat(vars, argument01) || methods.searchRepeat(fns, argument01)) {
+                        if (methods.searchRepeat(vars, argument02) || methods.searchRepeat(fns, argument02)) {
+                            return true
+                        }
+                    }
+                }
+            }
+            return false
+        }
     }
 
     add(objects, otherObjects, name, meaning) {
