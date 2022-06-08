@@ -115,8 +115,8 @@ class Methods {
                 if (meaning.includes(operations[i])) { // проверка функции на правильность использованных идентификаторов в функции
                     let argument01 = meaning.split(operations[i])[0];
                     let argument02 = meaning.split(operations[i])[1];
-                    if (methods.searchRepeat(vars, argument01) || methods.searchRepeat(fns, argument01)) {
-                        if (methods.searchRepeat(vars, argument02) || methods.searchRepeat(fns, argument02)) {
+                    if (methods.searchRepeat(vars, argument01) || methods.searchRepeat(fns, argument01)) { // проверка наличия операнда01 среди идентифиакаторов
+                        if (methods.searchRepeat(vars, argument02) || methods.searchRepeat(fns, argument02)) { // проверка наличия операнда01 среди идентифиакаторов
                             return true
                         }
                     }
