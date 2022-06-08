@@ -237,9 +237,6 @@ class Methods {
 form.addEventListener('submit', (e) => {
     e.preventDefault();
     methods.start([command.value]);
-
-    console.log(vars);
-    console.log(fns);
 })
 
 const vars = new Vars();
