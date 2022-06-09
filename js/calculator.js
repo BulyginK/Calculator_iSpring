@@ -75,7 +75,6 @@ class Methods {
 
         } else if (nameOperation === commands[4]) { // введено printvars
             if (Object.getOwnPropertyNames(vars).length !== 0) {
-                methods.sort(vars)
                 methods.printVars(vars);
                 methods.input();
             } else {
@@ -239,14 +238,14 @@ class Methods {
     }
 
     printVars(vars) {
-        let sortVars = methods.sort(vars);
+        let sortVars = methods.sort(vars); // сортировка по алфавиту
         for (let key in sortVars) {
             output.value += '' + key + ':' + Number(sortVars[key]).toFixed(2) + '\n';
         }
     }
 
     printFns(fns) {
-        let sortFns = methods.sort(fns);
+        let sortFns = methods.sort(fns); // сортировка по алфавиту
         for (let key in sortFns) {
             output.value += '' + key + ':' + Number(methods.computation(key, sortFns[key])).toFixed(2) + '\n';
         }
@@ -262,8 +261,8 @@ class Methods {
     }
 
     sort(objects) {
-        return Object.fromEntries(
-            Object.entries(objects).sort((a,b) => {
+        return Object.fromEntries( // запись в новый объект
+            Object.entries(objects).sort((a,b) => { // преобразование в массив и сортировка
                 if (a > b) return 1;
                 if (a < b) return -1;
             })
