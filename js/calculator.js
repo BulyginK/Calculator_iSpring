@@ -48,10 +48,12 @@ class Methods {
             }
 
         } else if (nameCommand === commands[1]) { // введено let
-            if (methods.checkName(name, needless)) {  // проверка имени переменной и отсутствовать среди функций
-                if (methods.searchRepeat(fns, name)) {
+            if (methods.checkName(name, needless)) {  // проверка имени переменной
+                if (methods.searchRepeat(fns, name)) { // должна отсутствовать среди функций
                     if (methods.checkLetNum(meaning) || !methods.searchRepeat(vars, meaning) || !methods.searchRepeat(fns, meaning)) { // должно быть числом || равно уже имеющейся переменной
                         methods.add(vars, fns, name, meaning); // добавление переменной
+                    } else {
+                        methods.output('Неверно задано значение let!');
                     }
                 } else {
                     methods.output('Переменная с таким идетификатором уже объявлена!');
@@ -72,8 +74,8 @@ class Methods {
             methods.input();
 
         } else if (nameOperation === commands[4]) { // введено printvars
-            // console.log(Object.getOwnPropertyNames(vars).length);
             if (Object.getOwnPropertyNames(vars).length !== 0) {
+                methods.sort(vars)
                 methods.printVars(vars);
                 methods.input();
             } else {
@@ -113,9 +115,9 @@ class Methods {
     checkLetNum(meaning) { // проверка переменной на числовове значение
         if (String(parseFloat(meaning, 10)) === String(meaning)) {
             return true
+        } else {
+            return false
         }
-        methods.output('Переменная может быть числом или равна уже имеющейся переменной!');
-        return false
     }
 
     searchRepeat(objects, name) { // поиск значения среди уже объявленных переменных
@@ -237,14 +239,16 @@ class Methods {
     }
 
     printVars(vars) {
-        for (let key in vars) {
-            output.value += '' + key + ':' + Number(vars[key]).toFixed(2) + '\n';
+        let sortVars = methods.sort(vars);
+        for (let key in sortVars) {
+            output.value += '' + key + ':' + Number(sortVars[key]).toFixed(2) + '\n';
         }
     }
 
     printFns(fns) {
-        for (let key in fns) {
-            output.value += '' + key + ':' + Number(methods.computation(key, fns[key])).toFixed(2) + '\n';
+        let sortFns = methods.sort(fns);
+        for (let key in sortFns) {
+            output.value += '' + key + ':' + Number(methods.computation(key, sortFns[key])).toFixed(2) + '\n';
         }
     }
 
@@ -255,6 +259,15 @@ class Methods {
 
     output(message) {
         output.value = String(parseFloat(message, 10)) === String(message) ? message.toFixed(2) : message;  // проверка на число
+    }
+
+    sort(objects) {
+        return Object.fromEntries(
+            Object.entries(objects).sort((a,b) => {
+                if (a > b) return 1;
+                if (a < b) return -1;
+            })
+        )
     }
 }
 
